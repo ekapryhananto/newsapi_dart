@@ -8,29 +8,29 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:project_visen/view/category.dart';
 import 'package:project_visen/view/detail.dart';
 import 'package:project_visen/view/profile.dart';
-import 'package:project_visen/view/search.dart';
-import 'favorite.dart';
+
+import 'home.dart';
 import 'login_page.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class SearchPage extends StatefulWidget {
+  final String judul;
+  const SearchPage({Key? key, required this.judul}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<SearchPage> createState() => _SearchPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _SearchPageState extends State<SearchPage> {
   late bool _loading;
   var newslist;
   int _currentIndex = 0;
   final _controller = TextEditingController();
-  String? text;
 
   List<CategoryModel> category = [];
 
-  void getNewsHome() async {
-    News news = News();
-    await news.getNews();
+  void getSearch() async {
+    SearchNews news = SearchNews();
+    await news.getSearch(widget.judul);
     newslist = news.news;
     setState(() {
       _loading = false;
@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     category = getCategory();
-    getNewsHome();
+    getSearch();
   }
 
   Widget build(BuildContext context) {
@@ -69,17 +69,15 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
+        currentIndex: 1,
         selectedItemColor: Colors.blue,
         onTap: (value) {
           if (value == 0) {
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (context) => HomePage()));
           } else if (value == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => FavoritePage()),
-            );
+            // Navigator.push(context,
+            //     MaterialPageRoute(builder: (context) => FavoritePage()));
           } else if (value == 2) {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => ProfilePage()));
@@ -140,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.all(15),
+                          padding: EdgeInsets.all(20),
                           child: Container(
                             padding: EdgeInsets.all(1),
                             child: Container(
